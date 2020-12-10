@@ -15,6 +15,10 @@ class CreateUnitsTable extends Migration
     {
         Schema::create('units', function (Blueprint $table) {
             $table->id();
+            $table->integer('unit_number');
+            $table->string('owner');
+            $table->decimal('square_meters');
+            $table->decimal('percentage');            
             $table->timestamps();
         });
     }
