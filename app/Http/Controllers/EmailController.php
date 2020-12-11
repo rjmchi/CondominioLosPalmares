@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Email;
+use App\Models\Unit;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use App\Http\Resources\EmailResource;
 
 class EmailController extends Controller
 {
@@ -14,7 +17,7 @@ class EmailController extends Controller
      */
     public function index()
     {
-        //
+        return EmailResource::collection(Email::all()); 
     }
 
     /**
@@ -25,7 +28,17 @@ class EmailController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $unit = Unit::where('unit_number', $request->unit_number)->first();
+
+        $email = new Email;
+        $email->unit_id = $unit->id;
+        $email->email = $request->email;
+
+        if (isset($request->name)){
+            $email->name = $request->name;
+        }
+        $email->save();
+        return new EmailResource($email);
     }
 
     /**
@@ -36,7 +49,7 @@ class EmailController extends Controller
      */
     public function show(Email $email)
     {
-        //
+        return new EmailResource($email);
     }
 
     /**
@@ -48,7 +61,14 @@ class EmailController extends Controller
      */
     public function update(Request $request, Email $email)
     {
-        //
+        if (isset($request->email)){
+            $email->email = $request->email;
+        }
+        if (isset($request->name)) {
+            $email->name = $request->name;
+        }
+        $email->save();
+        return new EmailResource($email);
     }
 
     /**
@@ -59,6 +79,9 @@ class EmailController extends Controller
      */
     public function destroy(Email $email)
     {
-        //
+        $email->delete();
+        return response()->json([
+            'message'=> 'Successfully Deleted',
+            'status' => Response::HTTP_NO_CONTENT]);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Unit;
 use Illuminate\Http\Request;
+use App\Http\Resources\UnitResource;
 
 class UnitController extends Controller
 {
@@ -14,18 +15,7 @@ class UnitController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+        return UnitResource::collection(Unit::all()); 
     }
 
     /**
@@ -36,7 +26,7 @@ class UnitController extends Controller
      */
     public function show(Unit $unit)
     {
-        //
+        return new UnitResource($unit);
     }
 
     /**
@@ -48,17 +38,9 @@ class UnitController extends Controller
      */
     public function update(Request $request, Unit $unit)
     {
-        //
+        $unit->owner = $request->owner;
+        $unit->update();
+        return new UnitResource($unit);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Unit  $unit
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Unit $unit)
-    {
-        //
-    }
 }
